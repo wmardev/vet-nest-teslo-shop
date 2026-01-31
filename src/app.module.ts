@@ -23,20 +23,16 @@ import { ClienteModule } from './api/cliente/module/cliente.module';
     ConfigModule.forRoot(),
 
     TypeOrmModule.forRoot({
-      ssl: process.env.STAGE === 'prod',
-      extra: {
-        ssl: process.env.STAGE === 'prod'
-          ? { rejectUnauthorized: false }
-          : null,
-      },
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      database: process.env.DB_NAME,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
+      url: process.env.DATABASE_URL, // ← Render inyecta esta variable
+      ssl: true, // ← IMPORTANTE para Render
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false, // ← FALSE en producción
     }),
 
     ServeStaticModule.forRoot({
@@ -53,7 +49,6 @@ import { ClienteModule } from './api/cliente/module/cliente.module';
     EspecieModule,
     RazaModule,
     MascotaModule,
-
   ],
   providers: [
     {
@@ -63,4 +58,4 @@ import { ClienteModule } from './api/cliente/module/cliente.module';
     // ... otros providers
   ],
 })
-export class AppModule { }
+export class AppModule {}
